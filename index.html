@@ -1,0 +1,90 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<script src="http://gsgd.co.uk/sandbox/jquery/easing/jquery.easing.1.3.js"></script>
+
+<script type="text/javascript">
+  $(document).ready(function() {
+    var url = "https://refresher.fastlane.tools/"
+    var user = "admin"
+    var password = "removed"
+
+    function spawnRocket(x, toolName) {
+      var top = $("#sky").height() - 15
+      style = "left: " + x + "px;" +
+              "top: " + top + "px;" +
+              "background-color: " + colorForTool(toolName)
+
+      var el = $('<div/>', {
+        class: "rocket " + toolName,
+        style: style
+      }).appendTo('#sky');
+      el.animate({
+        top: -el.height(),
+        easing: 'easeOutCubic'
+      }, 20000)
+    }
+    function colorForTool(tool) {
+      var matching = {
+        fastlane: "black",
+        deliver: "#E83F1A",
+        snapshot: "#1B7FFB",
+        frameit: "#88C258",
+        pem: "#8F3DE5",
+        sigh: "#1FBCD2",
+        produce: "#FCD648",
+        cert: "#607D8B",
+        codes: "#795548",
+        pilot: "#4CA3EB",
+        gym: "#7A81FF",
+        scan: "#000000",
+        supply: "#000000",
+        watchbuild: "#000000",
+        match: "#000000",
+        screengrab: "#257E6D"
+      }
+      return matching[tool]
+    }
+    function leftForRocket() {
+      return Math.random() * $("#sky").width()
+    }
+
+    var lastResults = {}
+    function loadFromServer() {
+      $.ajax({
+        type: "GET",
+        url: url,
+        dataType: 'json',
+        async: true,
+        beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(user + ":" + password)); },
+        success: function (results) {
+          console.log(results)
+          if (lastResults != null) {
+            $.each(results, function(key, value) { 
+              while (value > lastResults[key]) {
+                console.log("spawning " + key)
+                spawnRocket(leftForRocket(), key)
+                lastResults[key]++
+              }
+            });
+          }
+          lastResults = results
+        }
+      });
+    }
+    setInterval(loadFromServer, 5000)
+    loadFromServer()
+  })
+</script>
+
+<style type="text/css">
+  .rocket {
+    width: 10px;
+    height: 30px;
+    position: absolute;
+  }
+  #sky {
+    height: 100%;
+  }
+</style>
+
+<div id="sky">
+</div>
