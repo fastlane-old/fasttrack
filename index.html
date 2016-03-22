@@ -11,6 +11,10 @@
 
 <script type="text/javascript">
   $(document).ready(function() {
+    document.ontouchstart = function(e){ 
+      e.preventDefault(); 
+    }
+
     var url = "https://refresher.fastlane.tools/"
     var user = "admin"
     var password = "removed"
