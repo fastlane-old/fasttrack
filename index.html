@@ -7,7 +7,7 @@
     var user = "admin"
     var password = "removed"
 
-    function spawnRocket(x, toolName) {
+    function spawnRocket(x, toolName, time) {
       var top = $("#sky").height() - 15
       style = "left: " + x + "px;" +
               "top: " + top + "px;" +
@@ -17,14 +17,18 @@
         class: "rocket " + toolName,
         style: style
       }).appendTo('#sky');
+      
       el.animate({
         top: -el.height(),
         easing: 'easeOutCubic'
-      }, 20000)
+      }, time, function() {
+        $(this).remove();
+      })
     }
+
     function colorForTool(tool) {
       var matching = {
-        fastlane: "black",
+        fastlane: "white",
         deliver: "#E83F1A",
         snapshot: "#1B7FFB",
         frameit: "#88C258",
@@ -35,16 +39,39 @@
         codes: "#795548",
         pilot: "#4CA3EB",
         gym: "#7A81FF",
-        scan: "#000000",
-        supply: "#000000",
-        watchbuild: "#000000",
-        match: "#000000",
+        scan: "#FF3500",
+        supply: "#D502BC",
+        watchbuild: "white",
+        match: "#FD972D",
         screengrab: "#257E6D"
       }
       return matching[tool]
     }
-    function leftForRocket() {
-      return Math.random() * $("#sky").width()
+
+    var usedColumns = []
+    var rocketWidth = 25
+    function leftForRocket(time) {
+      for (i = 0; i < 100; i++) {
+        value = Math.random() * $("#sky").width()
+        column = Math.round(value / rocketWidth)
+        if (usedColumns[column] != true) {
+          usedColumns[column] = true
+
+          setTimeout(freeUp, time / 2, column)
+
+          return column * rocketWidth
+        }
+      }
+      console.log("No space for spawning this rocket")
+      console.log(usedColumns)
+      return -100
+    }
+    function freeUp(column) {
+      usedColumns[column] = false
+    }
+
+    function timeForRocket() {
+      return 10000 + Math.random() * 40000
     }
 
     var lastResults = {}
@@ -56,12 +83,13 @@
         async: true,
         beforeSend: function(xhr) { xhr.setRequestHeader("Authorization", "Basic " + btoa(user + ":" + password)); },
         success: function (results) {
-          console.log(results)
           if (lastResults != null) {
             $.each(results, function(key, value) { 
               while (value > lastResults[key]) {
-                console.log("spawning " + key)
-                spawnRocket(leftForRocket(), key)
+                console.log("Spawning " + key)
+                time = timeForRocket()
+                left = leftForRocket(time)
+                spawnRocket(left, key, time)
                 lastResults[key]++
               }
             });
@@ -76,6 +104,10 @@
 </script>
 
 <style type="text/css">
+  * {
+    margin: 0px;
+    padding: 0px;
+  }
   .rocket {
     width: 10px;
     height: 30px;
@@ -83,6 +115,7 @@
   }
   #sky {
     height: 100%;
+    background-color: black;
   }
 </style>
 
