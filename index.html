@@ -86,6 +86,7 @@
       return 10000 + Math.random() * 40000
     }
 
+    var intervalTime = 5000
     var lastResults = {}
     function loadFromServer() {
       $.ajax({
@@ -101,7 +102,7 @@
                 console.log("Spawning " + key)
                 time = timeForRocket()
                 left = leftForRocket(time)
-                spawnRocket(left, key, time)
+                setTimeout(spawnRocket, Math.random() * intervalTime, left, key, time)
                 lastResults[key]++
               }
             });
@@ -110,7 +111,7 @@
         }
       });
     }
-    setInterval(loadFromServer, 5000)
+    setInterval(loadFromServer, intervalTime)
     loadFromServer()
   })
 </script>
