@@ -5,7 +5,7 @@
     <link rel="apple-touch-icon-precomposed" sizes="57x57" href="icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="icon-72x72.png" />
     <link rel="apple-touch-icon-precomposed" sizes="114x114" href="icon-114x114.png" />
-    <title>🚀 fastlane 🚀</title>
+    <title>&#128640; fastlane &#128640;</title>
   </head>
   <body>
 
@@ -19,15 +19,24 @@
       e.preventDefault(); 
     }
 
-    var url = "https://refresher.fastlane.tools/"
     var user = "admin"
-    var password = "removed"
+    var password = null
+    var url = "https://refresher.fastlane.tools/"
+    if (password == null) {
+      url += "rockets"
+    }
 
     function spawnRocket(x, toolName, time) {
       var top = $("#sky").height() - 15
+      if (password != null) {
+        color = colors()[toolName]
+      } else {
+        color = allColors()[Math.round(Math.random() * allColors().length)]
+      }
+
       style = "left: " + x + "px;" +
               "top: " + top + "px;" +
-              "background-color: " + colorForTool(toolName)
+              "background-color: " + color
 
       var el = $('<div/>', {
         class: "rocket " + toolName,
@@ -42,8 +51,8 @@
       })
     }
 
-    function colorForTool(tool) {
-      var matching = {
+    function colors() {
+      return {
         fastlane: "white",
         deliver: "#E83F1A",
         snapshot: "#1B7FFB",
@@ -61,7 +70,26 @@
         match: "#FD972D",
         screengrab: "#257E6D"
       }
-      return matching[tool]
+    }
+
+    function allColors() {
+      return [
+        "white",
+        "#E83F1A",
+        "#1B7FFB",
+        "#88C258",
+        "#8F3DE5",
+        "#1FBCD2",
+        "#FCD648",
+        "#607D8B",
+        "#795548",
+        "#4CA3EB",
+        "#7A81FF",
+        "#FF3500",
+        "#D502BC",
+        "#FD972D",
+        "#257E6D"
+      ]
     }
 
     var usedColumns = []
