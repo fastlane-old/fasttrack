@@ -137,6 +137,10 @@
                 setTimeout(spawnRocket, Math.random() * intervalTime, left, key, time)
                 lastResults[key]++
               }
+              if (value < lastResults[key]) {
+                // it's a new, a new life
+                lastResults = null
+              }
             });
           }
           lastResults = results
