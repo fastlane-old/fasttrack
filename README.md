@@ -1,6 +1,6 @@
 # fasttrack
 
-A real-time visualisation of fastlane launches around the world
+A real-time visualisation of fastlane launches around the world: [Open link](https://krausefx.github.io/fasttrack/)
 
 ![assets/picture1.jpg](assets/picture1.jpg)
 
